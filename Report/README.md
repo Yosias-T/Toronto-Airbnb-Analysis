@@ -1,1 +1,1 @@
-Report file and screenshots of pages
+Report file and screenshots file for report pages
