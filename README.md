@@ -6,8 +6,8 @@ This project analyzes Toronto Airbnb listings to identify factors influencing ho
 
 ## Tools Used
 
+- pgAdmin 4
 - PostgreSQL
-- SQL
 - Excel
 - Power BI
 
