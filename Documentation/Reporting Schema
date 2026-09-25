@@ -1,12 +1,12 @@
 ```mermaid
 erDiagram
 
-    DIM_HOSTS ||--o{ FACT_LISTINGS : "hosts"
-    DIM_NEIGHBOURHOODS ||--o{ FACT_LISTINGS : "located in"
-    DIM_CLASSIFICATIONS ||--o{ FACT_LISTINGS : "classifies"
+    DIM_HOSTS ||--o{ FACT_LISTINGS : hosts
+    DIM_NEIGHBOURHOODS ||--o{ FACT_LISTINGS : located_in
+    DIM_CLASSIFICATIONS ||--o{ FACT_LISTINGS : classifies
 
-    FACT_LISTINGS ||--o{ BRIDGE_AMENITIES : "has"
-    DIM_AMENITIES ||--o{ BRIDGE_AMENITIES : "maps"
+    FACT_LISTINGS ||--o{ BRIDGE_AMENITIES : has
+    DIM_AMENITIES ||--o{ BRIDGE_AMENITIES : maps
 
     DIM_HOSTS {
         bigint host_key PK
@@ -42,39 +42,29 @@ erDiagram
 
     FACT_LISTINGS {
         bigint listing_id PK
-
         bigint host_key FK
         bigint neighbourhood_id FK
         bigint classification_key FK
-
         varchar listing_name
         varchar room_type
-
         smallint accommodates
         numeric bathrooms
         smallint bedrooms
         smallint beds
-
         numeric price
         boolean is_price_outlier
-
         int minimum_nights
         int maximum_nights
-
         smallint availability_30
         smallint availability_365
         smallint availability_eoy
-
         int number_of_reviews
         int number_of_reviews_ltm
         int number_of_reviews_ly
-
         smallint estimated_occupancy_l365d
         int estimated_revenue_l365d
-
         date first_review_date
         date last_review_date
-
         numeric overall_rating
         numeric accuracy_score
         numeric cleanliness_score
@@ -82,11 +72,8 @@ erDiagram
         numeric communication_score
         numeric location_score
         numeric value_score
-
         numeric reviews_per_month
-
         boolean instant_bookable
-
         numeric latitude
         numeric longitude
     }
@@ -102,21 +89,25 @@ erDiagram
 The reporting model was transformed from a highly normalized source structure into a dimensional model optimized for analytics and Power BI reporting.
 
 ### Fact Table
-- Fact_Listings
-  - One row per Airbnb listing.
-  - Stores occupancy, revenue, pricing, review, and availability metrics.
+
+**FACT_LISTINGS**
+- One row per Airbnb listing
+- Stores occupancy, revenue, pricing, review, and availability metrics
 
 ### Dimensions
-- Dim_Hosts
-- Dim_Neighbourhoods
-- Dim_Classifications
-- Dim_Amenities
+
+- DIM_HOSTS
+- DIM_NEIGHBOURHOODS
+- DIM_CLASSIFICATIONS
+- DIM_AMENITIES
 
 ### Bridge Table
-- Bridge_Amenities
-  - Resolves the many-to-many relationship between listings and amenities.
+
+**BRIDGE_AMENITIES**
+- Resolves the many-to-many relationship between listings and amenities
 
 ### Benefits
+
 - Simplified DAX calculations
 - Improved query performance
 - Reduced model complexity
