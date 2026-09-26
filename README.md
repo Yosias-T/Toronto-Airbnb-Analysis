@@ -28,15 +28,15 @@ The result is a complete BI pipeline: a cleaned, normalized PostgreSQL database 
 
 | Executive Overview | Revenue Drivers |
 |---|---|
-| ![Executive Overview](Dashboard/Screenshots/executive_overview.png) | ![Revenue Drivers](Dashboard/Screenshots/revenue_drivers.png) |
+| ![Executive Overview](Dashboard/Current/Screenshots/Overview.png) | ![Revenue Drivers](Dashboard/Current/Screenshots/Revenue%20Drivers.png) |
 
 | Listing Performance | Segment Matrix |
 |---|---|
-| ![Listing Performance](Dashboard/Screenshots/listing_performance.png) | ![Segment Matrix](Dashboard/Screenshots/segment_matrix.png) |
+| ![Listing Performance](Dashboard/Current/Screenshots/Listing%20Performance.png) | ![Segment Matrix](Dashboard/Current/Screenshots/Segment%20Matrix.png) |
 
 | Amenities | About & Definitions |
 |---|---|
-| ![Amenities](Dashboard/Screenshots/amenities.png) | ![About & Definitions](Dashboard/Screenshots/about_definitions.png) |
+| ![Amenities](Dashboard/Current/Screenshots/Amenities.png) | ![About & Definitions](Dashboard/Current/Screenshots/Info.png) |
 
 *Full-resolution screenshots available in [`Dashboard/Screenshots/`](Dashboard/Screenshots/).*
 
