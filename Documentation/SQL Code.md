@@ -240,8 +240,10 @@ WHERE rl.price IS NULL
   AND rl.inactive = false
   AND rl.room_type = sub.room_type;
 
--- Estimated revenue derived for rows still missing it, using the validated relationship
--- price * estimated_occupancy_l365d = estimated_revenue_l365d:
+-- Revenue derived for active rows still missing it, using price and occupancy
+-- (both now available, since price has just been imputed above). This relationship
+-- was validated against existing non-null price/revenue/occupancy rows before being
+-- applied here; the validation queries themselves aren't part of this documented script.
 UPDATE raw_listings
 SET estimated_revenue_l365d = price * estimated_occupancy_l365d
 WHERE estimated_revenue_l365d IS NULL
@@ -1331,7 +1333,7 @@ CREATE INDEX idx_fact_listings_classification_key
     ON fact_listings (classification_key);
 ```
 
-> **Note:** `dim_classifications` renames these fields for the reporting layer: `property_group` → `property_category`, and `accommodate_group` → `accommodation_size`. In the finished Power BI report these are displayed as **Property Category** and **Listing Size** — the "Property Group" naming used earlier in this document was the Phase 1 (2025) working name for the same field. See `DAX_MEASURES.md` for the full terminology mapping used in the report.
+> **Note:** `dim_classifications` renames these fields for the reporting layer: `property_group` → `property_category`, and `accommodate_group` → `accommodation_size`. In the finished Power BI report these are displayed as **Property Category** and **Listing Size** — the "Property Group" naming used earlier in this document was the Phase 1 (2025) working name for the same field. See [DAX Measures.md](./DAX%20Measures.md) for the full terminology mapping used in the report.
 
 ### 7.4 Amenity dimension and bridge table
 
