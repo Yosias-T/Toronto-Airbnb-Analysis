@@ -28,15 +28,15 @@ The result is a complete BI pipeline: a cleaned, normalized PostgreSQL database 
 
 | Executive Overview | Revenue Drivers |
 |---|---|
-| ![Executive Overview](Dashboard/Current/Screenshots/Overview.png) | ![Revenue Drivers](Dashboard/Current/Screenshots/Revenue%20Drivers.png) |
+| ![Executive Overview](Dashboard/Current/Screenshots/executive_overview.png) | ![Revenue Drivers](Dashboard/Current/Screenshots/revenue_drivers.png) |
 
 | Listing Performance | Segment Matrix |
 |---|---|
-| ![Listing Performance](Dashboard/Current/Screenshots/Listing%20Performance.png) | ![Segment Matrix](Dashboard/Current/Screenshots/Segment%20Matrix.png) |
+| ![Listing Performance](Dashboard/Current/Screenshots/listing_performance.png) | ![Segment Matrix](Dashboard/Current/Screenshots/segment_matrix.png) |
 
 | Amenities | About & Definitions |
 |---|---|
-| ![Amenities](Dashboard/Current/Screenshots/Amenities.png) | ![About & Definitions](Dashboard/Current/Screenshots/Info.png) |
+| ![Amenities](Dashboard/Current/Screenshots/amenities.png) | ![About & Definitions](Dashboard/Current/Screenshots/about_definitions.png) |
 
 *Full-resolution screenshots available in [`Dashboard/Current/Screenshots/`](Dashboard/Current/Screenshots/).*
 
@@ -47,7 +47,7 @@ The result is a complete BI pipeline: a cleaned, normalized PostgreSQL database 
 - **🛌 Occupancy Analysis** — occupancy paired against revenue across every major segment, exposing revenue/occupancy trade-offs (e.g. larger, longer-stay listings vs. higher-occupancy short-term listings).
 - **📍 Geographic Analysis** — neighbourhood-level revenue ranking across Toronto's 140+ neighbourhoods, grouped into broader analytical areas.
 - **⭐ Review Analysis** — listing-level ratings and review counts surfaced alongside top revenue performers, adding a quality dimension to raw performance ranking.
-- **🚩 Exception Reporting** — inactive listings, imputed prices, price outliers, and duplicate records are flagged (not silently dropped) throughout the pipeline, keeping the analysis transparent and auditable. See [`Documentation/SQL_Code.md`](Documentation/SQL_Code.md).
+- **🚩 Exception Reporting** — inactive listings, imputed prices, price outliers, and duplicate records are flagged (not silently dropped) throughout the pipeline, keeping the analysis transparent and auditable. See [`Documentation/SQL Code.md`](Documentation/SQL%20Code.md).
 
 ## 🔄 Data Pipeline
 
@@ -90,30 +90,29 @@ The reporting layer is a **star schema** built specifically for Power BI perform
 - **`dim_hosts`**, **`dim_neighbourhoods`**, **`dim_classifications`** — dimension tables for host, location, and property-classification attributes, with `dim_classifications` consolidating property category, listing size, stay length, and rental scope into a single low-cardinality dimension
 - **`dim_amenities`** + **`bridge_amenities`** — a bridge table resolving the many-to-many relationship between listings and amenities
 
-Full schema detail: [`Documentation/Source_Schema.md`](Documentation/Source_Schema.md) · [`Documentation/Reporting_Schema.md`](Documentation/Reporting_Schema.md)
+Full schema detail: [`Documentation/Reporting Schema.md`](Documentation/Reporting%20Schema.md) · [`Documentation/Data Dictionary.md`](Documentation/Data%20Dictionary.md)
 
 ## 📁 Repository Structure
 
 ```
 ├── README.md
 ├── Data/
-│   ├── airbnb_active_listings_reporting.csv   # cleaned, analysis-ready dataset
-│   └── Data_Source.md                         # source, scope, and collection details
+│   ├── Airbnb_toronto_cleaned.csv        # cleaned, analysis-ready dataset
+│   └── Data_source.md                    # source, scope, and collection details
 ├── Dashboard/
 │   ├── Current/
-│   │   └── Airbnb_Analytics.pbix              # final Power BI report
-│   ├── Legacy/
-│   │   ├── Excel_Dashboard.xlsx               # original 2025 Excel deliverable
-│   │   └── PowerBI_Presentation.pptx          # presentation summary
-│   └── Screenshots/                           # dashboard page previews
+│   │   ├── Airbnb_Analytics.pbix         # final Power BI report
+│   │   └── Screenshots/                  # dashboard page previews
+│   └── Previous Excel dashboard/
+│       ├── Airbnb Toronto Dashboard.xlsx     # original 2025 Excel deliverable
+│       └── Airbnb Toronto Presentation.pptx  # presentation summary
 └── Documentation/
-    ├── Final_Project_Writeup.md               # full case study
-    ├── Data_Dictionary.md                     # field-level definitions
-    ├── Source_Schema.md                       # normalized (Phase 1) schema
-    ├── Reporting_Schema.md                    # star schema (Phase 2)
-    ├── SQL_Code.md                             # full SQL, organized by workflow stage
-    ├── Measures.md                             # DAX measures & calculated columns
-    └── Project_Roadmap.md                      # project history and development steps
+    ├── Project Writeup.md                # full case study
+    ├── Data Dictionary.md                # field-level definitions
+    ├── Reporting Schema.md               # star schema design (Phase 2)
+    ├── SQL Code.md                       # full SQL, organized by workflow stage
+    ├── DAX Measures.md                   # DAX measures & calculated columns
+    └── Project Roadmap.md                # project history and development steps
 ```
 
 ## 🧠 Skills Demonstrated
@@ -130,13 +129,12 @@ Full schema detail: [`Documentation/Source_Schema.md`](Documentation/Source_Sche
 
 | Document | Description |
 |---|---|
-| [Data Dictionary](Documentation/Data_Dictionary.md) | Field-level definitions across the dataset |
-| [SQL Documentation](Documentation/SQL_Code.md) | Full SQL, organized by workflow stage |
-| [Measures Documentation](Documentation/Measures.md) | DAX measures and calculated columns by category |
-| [Source Schema](Documentation/Source_Schema.md) | Normalized relational model (Phase 1) |
-| [Reporting Schema](Documentation/Reporting_Schema.md) | Star schema powering the Power BI model (Phase 2) |
-| [Project Write-Up](Documentation/Final_Project_Writeup.md) | Full case study, written for hiring managers and technical reviewers |
-| [Project Roadmap](Documentation/Project_Roadmap.md) | Project history and development steps across both phases |
+| [Data Dictionary](Documentation/Data%20Dictionary.md) | Field-level definitions across the dataset |
+| [SQL Documentation](Documentation/SQL%20Code.md) | Full SQL, organized by workflow stage |
+| [Measures Documentation](Documentation/DAX%20Measures.md) | DAX measures and calculated columns by category |
+| [Reporting Schema](Documentation/Reporting%20Schema.md) | Star schema powering the Power BI model (Phase 2) |
+| [Project Write-Up](Documentation/Project%20Writeup.md) | Full case study, written for hiring managers and technical reviewers |
+| [Project Roadmap](Documentation/Project%20Roadmap.md) | Project history and development steps across both phases |
 
 ## 📊 Results
 
@@ -146,7 +144,7 @@ Full schema detail: [`Documentation/Source_Schema.md`](Documentation/Source_Sche
 - **Common amenities ≠ high-performing amenities** — baseline amenities (Wi-Fi, heating, A/C) are near-universal, while amenities associated with higher revenue (garage, lake view, building staff, waterfront) signal larger or higher-end properties.
 - **Data quality was handled transparently** — inactive listings, imputed prices, price outliers, and duplicate records were flagged, not silently removed, keeping the analysis auditable end to end.
 
-Full findings: [`Documentation/Project%20Writeup.md`](Documentation/Project%20Writeup.md)
+Full findings: [`Documentation/Project Writeup.md`](Documentation/Project%20Writeup.md)
 
 ## 👤 Author
 
