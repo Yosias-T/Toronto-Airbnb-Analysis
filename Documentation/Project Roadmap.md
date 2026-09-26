@@ -50,10 +50,10 @@ The Power BI work is a **continuation and expansion** of the original project �
 - These 9,895 rows were flagged `inactive = true` via a new boolean column, since they don't reflect current market activity and are missing the analysis's target variable.
 
 **Imputed price**
-- 1,308 active rows still had no price. Missing prices were imputed using the median price for the listing's `room_type` + `neighbourhood_cleansed` combination.
+- 1,308 active rows still had no price. Before imputing anything, these rows were checked against `estimated_occupancy_l365d`, `estimated_revenue_l365d`, and `number_of_reviews` to confirm they were genuinely active listings (which is why they weren't already flagged `inactive`) and to see whether price could simply be *calculated* from the other two figures (`price = revenue ÷ occupancy`). That check showed these rows had occupancy and/or review activity but not revenue — so both price and revenue were missing together, leaving nothing to divide. Since price couldn't be derived mathematically, it was imputed using the median price for the listing's `room_type` + `neighbourhood_cleansed` combination.
 - One listing had a unique `room_type`/`neighbourhood` combination with no comparison group; its price was imputed from the median for its `room_type` alone.
 - An `imputed_price` boolean column tracks which rows were estimated.
-- For rows still missing `estimated_revenue_l365d`, revenue was derived as `price × estimated_occupancy_l365d` — an approach validated first by confirming the equation held true on rows where both values already existed.
+- For rows still missing `estimated_revenue_l365d`, revenue was derived as `price × estimated_occupancy_l365d` — this is the mathematical step, applied *after* price was filled in, once both figures needed for the calculation actually existed. This relationship was validated against existing rows where price, occupancy, and revenue were all already known, before being applied to fill the missing ones (the validation queries themselves aren't included in the documented SQL).
 
 ### 3. Feature Engineering
 
@@ -146,7 +146,7 @@ A few fields were added directly in the Power BI model (calculated columns), on 
 - **`Revenue bins`** and **`Revenue Range`** (`fact_listings`) — Estimated Revenue grouped into $10K brackets, with a second column built on top of the first to generate a readable label (e.g. *"10K–20K"*) for the revenue-distribution histogram on the Executive Overview page.
 - **`Amenity Count`** (`fact_listings`) — a count of amenities per listing via the bridge table, used for the `Average Amenity Count` measure.
 
-Full DAX for the model's measures and calculated columns is documented in **[`DAX_MEASURES.md`](./DAX_MEASURES.md)**.
+Full DAX for the model's measures and calculated columns is documented in **[DAX Measures.md](./DAX%20Measures.md)**.
 
 **Terminology note:** a few fields carry different names at different stages of the project. For reference:
 
