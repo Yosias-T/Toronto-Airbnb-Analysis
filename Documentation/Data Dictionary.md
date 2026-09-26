@@ -2,9 +2,9 @@
 
 This document defines every table and field in the Power BI reporting model, which follows a star-schema design: one fact table (`FACT_LISTINGS`) surrounded by four dimension tables (`DIM_HOSTS`, `DIM_NEIGHBOURHOODS`, `DIM_CLASSIFICATIONS`, `DIM_AMENITIES`) and one bridge table (`BRIDGE_AMENITIES`) resolving the many-to-many relationship between listings and amenities.
 
-Data types reflect the PostgreSQL types used to build the reporting schema (see [`SQL_Code.md`](./SQL_Code.md)). "Business Purpose" describes how each field is actually used in analysis and reporting, not just what it technically stores.
+Data types reflect the PostgreSQL types used to build the reporting schema (see [SQL Code.md](./SQL%20Code.md) and [Reporting Schema.md](./Reporting%20Schema.md)). "Business Purpose" describes how each field is actually used in analysis and reporting, not just what it technically stores.
 
-> **Note on naming:** several fields carry different names at different stages of the project (e.g. `property_group` in the source model → `property_category` here). Where relevant, the prior name is noted for cross-reference with [`Source_Schema.md`](./Source_Schema.md).
+> **Note on naming:** several fields carry different names at different stages of the project (e.g. `property_group` in the original SQL model → `property_category` here). Where relevant, the prior name is noted for cross-reference with [SQL Code.md](./SQL%20Code.md).
 
 ---
 
@@ -110,7 +110,7 @@ Data types reflect the PostgreSQL types used to build the reporting schema (see 
 | `latitude` | `NUMERIC(9,6)` | Geographic latitude of the listing. | Supports map-based visualization and precise geographic analysis beyond neighbourhood-level grouping. |
 | `longitude` | `NUMERIC(9,6)` | Geographic longitude of the listing. | Same purpose as `latitude`. |
 
-*Assumption: `first_review_date` and `last_review_date` correspond to the source fields `first_review` and `last_review`, renamed for clarity in the reporting layer. `estimated_revenue_l365d` reflects Airbnb's own trailing-365-day estimate where present, supplemented by a calculated value (price × estimated occupancy) for listings missing this figure directly — see the imputation methodology in [`Source_Schema.md`](./Source_Schema.md).*
+*Assumption: `first_review_date` and `last_review_date` correspond to the source fields `first_review` and `last_review`, renamed for clarity in the reporting layer. `estimated_revenue_l365d` reflects Airbnb's own trailing-365-day estimate where present, supplemented by a calculated value (price × estimated occupancy) for listings missing this figure directly — see the imputation methodology in [SQL Code.md](./SQL%20Code.md) (Section 2.3).*
 
 ---
 
