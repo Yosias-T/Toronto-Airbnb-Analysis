@@ -44,9 +44,9 @@ Initial preparation happened in Excel, before the data ever reached the database
 
 ## Data Preparation
 
-Data preparation followed a standard, defensible cleaning pipeline, all performed in SQL and documented in full in [`SQL_CODE.md`](./SQL_CODE.md).
+Data preparation followed a standard, defensible cleaning pipeline, all performed in SQL and documented in full in [SQL Code.md](./SQL%20Code.md).
 
-**Missing values.** Missing `bathrooms` values were recovered from the free-text `bathrooms_text` field via regex extraction; a small number of rows with no usable data in either field were removed. Rows with no revenue or occupancy data over the trailing 365 days (9,895 of them) were flagged as **inactive** rather than deleted outright, since they don't reflect current market activity but still carry other useful attributes. Among the remaining active listings, 1,308 had no price; these were imputed using the **median price for the listing's room type and neighbourhood**, with a fallback to room-type-only median for the one listing with no matching comparison group. Every imputed row is tracked with a boolean flag, so any downstream analysis can include or exclude imputed values as needed.
+**Missing values.** Missing `bathrooms` values were recovered from the free-text `bathrooms_text` field via regex extraction; a small number of rows with no usable data in either field were removed. Rows with no revenue or occupancy data over the trailing 365 days (9,895 of them) were flagged as **inactive** rather than deleted outright, since they don't reflect current market activity but still carry other useful attributes. Among the remaining active listings, 1,308 had no price. Before imputing anything, these rows were checked against occupancy, revenue, and review-count fields to confirm they were genuinely active and to test whether price could simply be calculated from revenue and occupancy directly — it couldn't, since revenue was missing for the same rows. Only then were prices imputed, using the **median price for the listing's room type and neighbourhood**, with a fallback to room-type-only median for the one listing with no matching comparison group. Every imputed row is tracked with a boolean flag, so any downstream analysis can include or exclude imputed values as needed.
 
 **Feature engineering.** Several analytical fields were derived directly from raw attributes:
 - **Stay Length Category** — binned from `minimum_nights` into Short-term (<28 days), Long-term (28–89), Seasonal (90–179), and Lease-style (180+), a categorization that turns out to carry real signal about Toronto's short-term rental regulatory environment.
@@ -88,7 +88,7 @@ An earlier version of the report plan explored a Decomposition Tree and Key Infl
 
 ## DAX Measures
 
-The DAX layer (full detail in [`DAX_MEASURES.md`](./DAX_MEASURES.md)) follows a consistent, extensible pattern rather than one-off calculations for each visual.
+The DAX layer (full detail in [DAX Measures.md](./DAX%20Measures.md)) follows a consistent, extensible pattern rather than one-off calculations for each visual.
 
 **Base measures** — `Total Listings`, `Total Revenue`, `Total Occupied Nights`, and their average/median variants — form the foundation every other measure builds on.
 
@@ -130,7 +130,7 @@ A meaningful part of this project's rigor lies in how it identified and handled 
 
 **Inactive listings.** 9,895 listings had no revenue and no occupancy recorded over the trailing 365 days. Rather than deleting these rows, they were retained in the raw table and flagged with an `inactive` boolean, preserving the option to reference them later (for instance, to compare active vs. inactive listing characteristics) while excluding them from the core revenue/occupancy analysis, since they don't reflect current market conditions.
 
-**Imputed pricing.** 1,308 active listings had no recorded price. Rather than exclude them or impute a single global average, prices were estimated using the median price for each listing's specific room type and neighbourhood combination — a locally-contextualized imputation that respects the fact that price varies substantially by both factors. The one listing with a unique room-type/neighbourhood combination and no comparison group was imputed using a room-type-only fallback. Every imputed row carries a boolean flag, so the choice to include or exclude imputed values in any downstream analysis remains available and auditable rather than hidden.
+**Imputed pricing.** 1,308 active listings had no recorded price. The first step wasn't imputation — it was a diagnostic check against occupancy, revenue, and review counts to confirm these listings were genuinely active (rather than simply under-flagged inactive listings) and to test whether price could be derived mathematically from revenue and occupancy (`price = revenue ÷ occupancy`). That check showed these rows had occupancy and/or review activity but not revenue, so both figures needed for a direct calculation weren't available together. Only once math was ruled out were prices estimated, using the median price for each listing's specific room type and neighbourhood combination — a locally-contextualized imputation that respects the fact that price varies substantially by both factors. The one listing with a unique room-type/neighbourhood combination and no comparison group was imputed using a room-type-only fallback. (For the smaller number of rows still missing *revenue* after imputation, revenue was calculated directly as `price × occupancy` — a relationship validated against existing rows where all three values were already known.) Every imputed row carries a boolean flag, so the choice to include or exclude imputed values in any downstream analysis remains available and auditable rather than hidden.
 
 **Price outliers.** Using the IQR method (Q1 = $79, Q3 = $221, IQR = $142), an upper fence of $434 was established, and listings priced above it were flagged rather than removed. This preserves legitimate high-end listings in the dataset for reporting purposes while giving any analysis the option to exclude them when outliers would distort an average.
 
@@ -163,4 +163,4 @@ Just as importantly, the project's two-phase structure — a 2025 SQL/Excel anal
 
 ---
 
-*Full technical documentation: [`PROJECT_ROADMAP.md`](./PROJECT_ROADMAP.md) (project history and development steps) · [`SQL_CODE.md`](./SQL_CODE.md) (database design and transformation logic) · [`DAX_MEASURES.md`](./DAX_MEASURES.md) (Power BI measure and calculated-column reference)*
+*Full technical documentation: [Project Roadmap.md](./Project%20Roadmap.md) (project history and development steps) · [SQL Code.md](./SQL%20Code.md) (database design and transformation logic) · [DAX Measures.md](./DAX%20Measures.md) (Power BI measure and calculated-column reference) · [Data Dictionary.md](./Data%20Dictionary.md) (field-level definitions) · [Reporting Schema.md](./Reporting%20Schema.md) (star-schema design)*
