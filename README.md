@@ -38,7 +38,7 @@ The result is a complete BI pipeline: a cleaned, normalized PostgreSQL database 
 |---|---|
 | ![Amenities](Dashboard/Current/Screenshots/Amenities.png) | ![About & Definitions](Dashboard/Current/Screenshots/Info.png) |
 
-*Full-resolution screenshots available in [`Dashboard/Screenshots/`](Dashboard/Screenshots/).*
+*Full-resolution screenshots available in [`Dashboard/Current/Screenshots/`](Dashboard/Current/Screenshots/).*
 
 ## ✨ Key Features
 
@@ -146,7 +146,7 @@ Full schema detail: [`Documentation/Source_Schema.md`](Documentation/Source_Sche
 - **Common amenities ≠ high-performing amenities** — baseline amenities (Wi-Fi, heating, A/C) are near-universal, while amenities associated with higher revenue (garage, lake view, building staff, waterfront) signal larger or higher-end properties.
 - **Data quality was handled transparently** — inactive listings, imputed prices, price outliers, and duplicate records were flagged, not silently removed, keeping the analysis auditable end to end.
 
-Full findings: [`Documentation/Final_Project_Writeup.md`](Documentation/Final_Project_Writeup.md)
+Full findings: [`Documentation/Project%20Writeup.md`](Documentation/Project%20Writeup.md)
 
 ## 👤 Author
 
