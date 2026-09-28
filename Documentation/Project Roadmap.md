@@ -140,11 +140,15 @@ After completing the Microsoft Power BI Data Analyst (PL-300) certification, the
 
 ### 4. Power BI Model Extensions
 
-A few fields were added directly in the Power BI model (calculated columns), on top of the reporting schema built in SQL:
+Several fields were added directly in the Power BI model (calculated columns), on top of the reporting schema built in SQL:
 
 - **`Segment`** (`dim_classifications`) — a concatenated label combining Property Category, Stay Length Category, and Listing Size (e.g. *"Apartment | Short-term | Group"*), used to drive the segment-level analysis on the Segment Matrix page.
 - **`Revenue bins`** and **`Revenue Range`** (`fact_listings`) — Estimated Revenue grouped into $10K brackets, with a second column built on top of the first to generate a readable label (e.g. *"10K–20K"*) for the revenue-distribution histogram on the Executive Overview page.
 - **`Amenity Count`** (`fact_listings`) — a count of amenities per listing via the bridge table, used for the `Average Amenity Count` measure.
+- **`Rating Band`** (`fact_listings`) — groups the overall rating into four bands (Below 4.0, 4.0–4.5, 4.5–4.8, 4.8–5.0) for the Host Performance page, with a companion sort column. Ratings below 4.0 were merged into one band because the lowest ratings have very few listings.
+- **`Active Listings Count`**, **`Host Scale`** (with a sort column), and **`Superhost Status`** (`dim_hosts`) — the host-level fields behind the Host Performance page. `Host Scale` groups hosts into 1 / 2–3 / 4–10 / 10+ listings, and `Superhost Status` turns the boolean Superhost flag into readable labels, with an "Unknown" value for hosts with missing status.
+
+**Host portfolio size was rebuilt during report development.** `Host Scale` was first built on Airbnb's reported host listing count, but the totals didn't reconcile: 1,425 hosts in the "2–3 listings" bucket accounted for only 2,585 listings, which is impossible if each host has at least two. Airbnb's count includes listings that are not in the cleaned dataset (for example, inactive listings excluded during data preparation). The buckets were rebuilt on `Active Listings Count`, a count of each host's listings actually present in the model, so groupings and the listings they contain now come from the same source.
 
 Full DAX for the model's measures and calculated columns is documented in **[DAX Measures.md](./DAX%20Measures.md)**.
 
@@ -161,7 +165,7 @@ Full DAX for the model's measures and calculated columns is documented in **[DAX
 
 ### 5. Report Design
 
-The report comprises five analytical pages plus an About & Definitions page, navigated via a left sidebar.
+The report comprises six analytical pages plus an About & Definitions page, navigated via a left sidebar.
 
 **Visual style:** a compact, professional palette — dark teal (`#087E8B`) as the primary analytical color, coral (`#FF5A5F`) reserved for highlights and key findings, dark gray for text, light gray for the canvas, with mauve as an occasional third categorical color. Header banner in a darker accent color, white content cards on a light neutral background, and compact KPI cards (large number, small label) rather than verbose card text.
 
@@ -169,8 +173,9 @@ The report comprises five analytical pages plus an About & Definitions page, nav
 
 | Page | Purpose | Key visuals |
 |---|---|---|
-| **Executive Overview** | How is the Toronto market performing overall? | KPI strip (Total Listings, Total Revenue, Average Revenue, Median Revenue, Average Occupancy %); revenue distribution histogram (by $10K bracket); listings & median revenue by Property Category; listings & average revenue by Listing Size; revenue share vs. listing share by Property Category |
-| **Revenue Drivers** | Which characteristics are associated with higher revenue? | Revenue & occupancy by Stay Length Category; revenue & occupancy by Listing Size; median revenue by Property Category; top 10 neighbourhoods by median revenue |
+| **Executive Overview** | How is the Toronto market performing overall? | KPI strip (Total Listings, Total Revenue, Average Revenue, Median Revenue, Average Occupancy %); revenue distribution histogram (by $10K bracket); listings & median revenue by Property Category; listings & median revenue by Listing Size; revenue share vs. listing share by Property Category |
+| **Revenue Drivers** | Which characteristics are associated with higher revenue? | Revenue & occupancy by Stay Length Category; revenue & occupancy by Listing Size; revenue & occupancy by Rental Scope; top 10 neighbourhoods by median revenue (minimum 30 listings) |
+| **Host Performance** | Does who's hosting matter as much as what's being hosted? | Revenue & occupancy by host portfolio size (Host Scale); revenue & occupancy by Superhost status; revenue & occupancy by Rating Band; Key Findings panel |
 | **Listing Performance** | Which listings and characteristics stand out? | Revenue-vs-occupied-nights scatter plot (by Property Category); top 15 listings by revenue table |
 | **Segment Matrix** | Which listing segments perform best? | Listing segment performance matrix (Property Category × totals, medians, averages); top 5 segments by median revenue; a written Key Findings panel |
 | **Amenities** | Are certain amenities associated with listing performance? | Most common amenities; amenities associated with higher revenue; amenities associated with higher occupancy (all gated at a 2% listing-prevalence minimum); amenity prevalence vs. performance scatter |
@@ -182,10 +187,16 @@ An earlier version of the report plan explored a Decomposition Tree and Key Infl
 
 The `Segment` field (Property Category × Stay Length Category × Listing Size) powers a dedicated performance matrix, surfacing patterns not visible from any single classification alone. Documented findings from the Segment Matrix page:
 
-1. **Property mix:** Apartments account for 54% of listings, followed by houses at 42%.
+1. **Property mix:** Apartments account for 54% of listings, followed by houses at 45%.
 2. **Revenue concentration:** Apartments generate 66% of total estimated revenue, despite representing 54% of listings.
 3. **Listing size:** all five top-performing segments (by median revenue) consist of Large or Group listings — 5+ guests.
 4. **Stay length:** short-term listings appear in 3 of the top 5 segments, though long-term segments also rank highly.
+
+**Host Performance page.** Three further observations from the Host Performance page:
+
+1. **Portfolio size:** Single-listing hosts show about double the median revenue of multi-listing hosts ($21.6K vs. $9.5K–$11.8K across the multi-listing tiers), with only a modest occupancy edge (37.9% vs. 34.9% for hosts with 10+ listings). The multi-listing tiers look similar to one another. The 10+ tier represents only 33 hosts (628 listings).
+2. **Superhost status:** Superhosts show roughly double the median revenue ($20.7K vs. $10.6K) and higher average occupancy (43.2% vs. 29.4%). Superhost status is partly earned through strong performance, so this likely reflects already-successful listings as much as any effect of the status itself.
+3. **Review ratings:** Median revenue rises with rating band, from $5.0K (below 4.0) to $17.3K (4.8–5.0). Occupancy is itself estimated from review counts, so listings with more reviews look stronger by construction, and the relationship likely runs in both directions.
 
 These are associations observed in the dataset, not causal claims — consistent with the disclaimer on the About & Definitions page.
 
@@ -199,4 +210,6 @@ These are associations observed in the dataset, not causal claims — consistent
 - **Property Group classification was built in three passes** — an initial rule set, a small patch for edge cases (e.g. "casa particular," "hostel"), and a later pass to resolve any remaining "Other" rows. The logic in that final pass (mapping `'Private room'` → Apartment and `'Entire place'` → House) doesn't clearly follow the reasoning used in the earlier, more granular passes and may be worth revisiting.
 - **Amenity text cleaning happened in two rounds** — once shortly after the amenities table was first created, and again, more extensively, during the Phase 2 reporting-schema build. Both are legitimate parts of the project's history.
 - **An early, apparently superseded `listings` table definition** appears at the very start of the SQL file, before `raw_listings` is created. It looks like an initial draft schema that predates the final approach and was not carried forward.
-
+- **Occupancy and revenue are modelled estimates, not observed bookings.** Inside Airbnb estimates occupancy from review counts, using an assumed review rate and an assumed length of stay (3 nights by default, or the listing's minimum nights if higher), and caps the result at 70% of the year ([methodology](https://insideairbnb.com/data-assumptions/)). This matches the ceiling seen in this dataset: no listing exceeds 255 estimated nights, and 2,174 listings (19.5%) sit exactly at that value. Estimated revenue is then derived from price and estimated occupancy. Two consequences: occupancy for the highest-occupancy listings is a floor rather than a precise value, and comparisons involving review volume or minimum stay (Superhost status, review rating, Stay Length Category) partly reflect how the estimate is built.
+- **520 listings have unknown Superhost status.** They are excluded from the Superhost visual on the Host Performance page (noted in a page footnote) rather than counted as non-Superhosts, since missing data is not evidence of non-Superhost status.
+- **Top 10 Neighbourhoods applies a 30-listing minimum.** Before the minimum was applied, the top-ranked neighbourhood (Bridle Path-Sunnybrook-York Mills) rested on only 11 listings. 97 of 140 neighbourhoods meet the threshold.
