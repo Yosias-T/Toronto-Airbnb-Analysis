@@ -159,4 +159,8 @@ Full findings: [`Documentation/Project Writeup.md`](Documentation/Project%20Writ
 
 This project reflects an iterative, self-directed approach to analytics: starting from an exploratory SQL/Excel analysis, then rebuilding and expanding it into a governed, dimensional Power BI solution after formal Power BI certification (PL-300). Feedback and connections welcome.
 
-📧 [Email] · 💼 [LinkedIn] · 🌐 [Portfolio]
+## Contact
+
+📧 yosias.tesh@gmail.com ·
+💼 [LinkedIn](https://www.linkedin.com/in/yosias-teshome/) ·
+🌐 [GitHub](https://github.com/Yosias-T)
