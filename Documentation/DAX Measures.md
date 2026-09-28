@@ -10,9 +10,11 @@ This document covers the DAX layer of the Phase 2 (2026) Power BI model: calcula
 
 ## Calculated Columns
 
-Added directly in the Power BI model, beyond the reporting schema built in SQL.
+Added directly in the Power BI model, on top of the reporting schema built in SQL. Columns are grouped by the table they live on.
 
-**`Segment`** (`dim_classifications`) — concatenates three classification fields into a single label for segment-level analysis (e.g. *"Apartment | Short-term | Group"*). This is what powers the Segment Matrix page's ability to compare specific combinations of characteristics, rather than one dimension at a time.
+### dim_classifications
+
+**`Segment`** — concatenates three classification fields into a single label (e.g. *"Apartment | Short-term | Group"*). This is what lets the Segment Matrix page compare specific combinations of characteristics rather than one dimension at a time.
 
 ```dax
 Segment =
@@ -23,9 +25,64 @@ dim_classifications[Property Category]
 & dim_classifications[Listing Size]
 ```
 
-**`Revenue bins`** (`fact_listings`) — buckets Estimated Revenue into $10,000 brackets, used as the grouping key for the revenue-distribution histogram on the Executive Overview page.
+### dim_hosts
 
-**`Revenue Range`** (`fact_listings`) — builds a readable label from `Revenue bins` (e.g. *"10K–20K"*), since the raw bin values alone aren't a useful axis label:
+**`Active Listings Count`** — the number of a host's listings that actually exist in the cleaned dataset. This replaces Airbnb's reported `total_listings_count` for grouping hosts. Airbnb's figure counts listings that are not in the cleaned dataset (for example, inactive listings excluded during data preparation), which made the original portfolio-size buckets inconsistent with the listings they contained.
+
+```dax
+Active Listings Count =
+COUNTROWS(RELATEDTABLE(fact_listings))
+```
+
+**`Host Scale`** — buckets hosts by Active Listings Count for the portfolio-size analysis on the Host Performance page.
+
+```dax
+Host Scale =
+VAR Listings = dim_hosts[Active Listings Count]
+RETURN
+    SWITCH(
+        TRUE(),
+        ISBLANK(Listings), "Unknown",
+        Listings <= 1, "1 Listing",
+        Listings <= 3, "2-3 Listings",
+        Listings <= 10, "4-10 Listings",
+        "10+ Listings"
+    )
+```
+
+**`Host Scale Sort`** — helper column that sorts `Host Scale` in logical order (1 Listing → 10+ Listings) instead of alphabetically. Applied with Column tools → Sort by column.
+
+```dax
+Host Scale Sort =
+VAR Listings = dim_hosts[Active Listings Count]
+RETURN
+    SWITCH(
+        TRUE(),
+        ISBLANK(Listings), 0,
+        Listings <= 1, 1,
+        Listings <= 3, 2,
+        Listings <= 10, 3,
+        4
+    )
+```
+
+**`Superhost Status`** — converts the boolean Superhost flag into readable labels. Hosts with unknown status get their own "Unknown" value, so they can be excluded from the Superhost visual instead of being counted as non-Superhosts.
+
+```dax
+Superhost Status =
+SWITCH(
+    TRUE(),
+    ISBLANK(dim_hosts[Superhost]), "Unknown",
+    dim_hosts[Superhost] = TRUE(), "Superhost",
+    "Not Superhost"
+)
+```
+
+### fact_listings
+
+**`Revenue bins`** — buckets Estimated Revenue into $10,000 brackets. It is the grouping key for the revenue-distribution histogram on the Executive Overview page.
+
+**`Revenue Range`** — builds a readable label from `Revenue bins` (e.g. *"10K–20K"*), since the raw bin values alone aren't a useful axis label.
 
 ```dax
 Revenue Range =
@@ -40,14 +97,44 @@ RETURN
     )
 ```
 
-**`Amenity Count`** (`fact_listings`) — counts how many amenities are linked to each listing via the bridge table, feeding the `Average Amenity Count` measure below.
+**`Amenity Count`** — counts how many amenities are linked to each listing via the bridge table. It feeds the `Average Amenity Count` measure.
 
 ```dax
 Amenity Count =
 COUNTROWS(RELATEDTABLE(bridge_amenities))
 ```
 
----
+**`Rating Band`** — groups the overall rating into four bands for the Host Performance page. Ratings below 4.0 are merged into one band because the lowest ratings have very few listings.
+
+```dax
+Rating Band =
+VAR Rating = fact_listings[Overall Rating]
+RETURN
+    SWITCH(
+        TRUE(),
+        ISBLANK(Rating), "No Rating",
+        Rating < 4.0, "Below 4.0",
+        Rating < 4.5, "4.0–4.5",
+        Rating < 4.8, "4.5–4.8",
+        "4.8–5.0"
+    )
+```
+
+**`Rating Band Sort`** — helper column that sorts `Rating Band` from lowest to highest.
+
+```dax
+Rating Band Sort =
+VAR Rating = fact_listings[Overall Rating]
+RETURN
+    SWITCH(
+        TRUE(),
+        ISBLANK(Rating), 0,
+        Rating < 4.0, 1,
+        Rating < 4.5, 2,
+        Rating < 4.8, 3,
+        4
+    )
+```
 
 ## Measures
 
