@@ -140,7 +140,7 @@ Each field is documented with:
 
 *Assumption: `Estimated Revenue (Last 365 Days)` reflects Airbnb's own trailing-365-day estimate where present, supplemented by a calculated value (price × estimated occupancy) for listings missing this figure directly — see the imputation methodology in* [*SQL Code.md*](./SQL%20Code.md) *(Section 2.3).*
 
-*Not loaded into Power BI: the source column `room\_type` (Airbnb's native room-type classification: Entire home/apt, Private room, Shared room, Hotel room) is removed in Power Query. It remains available in the PostgreSQL `reporting.fact\_listings` table; the derived `Rental Scope` in `dim\_classifications` is used in the report instead.*
+*Not loaded into Power BI: the source column `room_type` (Airbnb's native room-type classification: Entire home/apt, Private room, Shared room, Hotel room) is removed in Power Query. It remains available in the PostgreSQL `reporting.fact_listings` table; the derived `Rental Scope` in `dim_classifications` is used in the report instead.*
 
 ### Calculated columns (DAX)
 
