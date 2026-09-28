@@ -119,9 +119,6 @@ Each field is documented with:
 |**Is Price Outlier**|`is_price_outlier`|`BOOLEAN` → True/False|Flags listings priced above the IQR-based upper fence ($434/night).|Allows analysis to include or exclude unusually high-priced listings, preventing a small number of luxury outliers from distorting average price or revenue figures.|
 |**Minimum Nights**|`minimum_nights`|`INT` → Whole Number|The minimum number of nights a guest must book.|The raw value underlying `Stay Length Category`; also directly relevant to understanding regulatory-driven booking constraints.|
 |**Maximum Nights**|`maximum_nights`|`INT` → Whole Number|The maximum number of nights a guest may book.|Complements `Minimum Nights` in describing a listing's booking-length policy.|
-|**Availability (Last 30 Days)** ¹|`availability_30`|`SMALLINT` → Whole Number|Number of days available for booking in the **next** 30 days.|A short-term, forward-looking availability signal, useful for understanding near-term booking pressure. Default aggregation: average.|
-|**Availability (Last 365 Days)** ¹|`availability_365`|`SMALLINT` → Whole Number|Number of days available for booking in the **next** 365 days.|A longer-term availability signal; low values can indicate a listing that is heavily booked or intentionally restricted. Default aggregation: average.|
-|**Availability (End Of Fiscal Year)** ¹|`availability_eoy`|`SMALLINT` → Whole Number|Number of days available for booking through the end of the current **calendar** year.|Supports seasonal/year-end booking-pressure analysis distinct from the rolling 30/365-day windows. Default aggregation: average.|
 |**Total Reviews**|`number_of_reviews`|`INT` → Whole Number|Total number of reviews received over the listing's lifetime.|A proxy for a listing's overall booking history and guest engagement over time.|
 |**Total Reviews (Last 12 Months)**|`number_of_reviews_ltm`|`SMALLINT` → Whole Number|Number of reviews received in the last twelve months.|A more current activity signal than lifetime review count, useful for assessing recent guest engagement.|
 |**Total Reviews (Last Year)**|`number_of_reviews_ly`|`SMALLINT` → Whole Number|Number of reviews received in the prior calendar year.|Supports year-over-year review-volume comparison.|
@@ -140,8 +137,6 @@ Each field is documented with:
 |**Instantly Bookable**|`instant_bookable`|`BOOLEAN` → True/False|Whether the listing can be booked immediately without host approval.|A booking-friction indicator; relevant to understanding whether ease of booking correlates with occupancy performance.|
 |**Latitude**|`latitude`|`NUMERIC(9,6)` → Decimal Number|Geographic latitude of the listing.|Supports map-based visualization and precise geographic analysis beyond neighbourhood-level grouping.|
 |**Longitude**|`longitude`|`NUMERIC(9,6)` → Decimal Number|Geographic longitude of the listing.|Same purpose as `Latitude`.|
-
-¹ The Power BI display names for these three columns ("Last 30 Days", "Last 365 Days", "End Of Fiscal Year") do not match what the source fields actually measure (forward-looking availability windows and a calendar-year end). The names above reflect the current model. Suggested renames: `Availability (Next 30 Days)`, `Availability (Next 365 Days)`, and `Availability (End Of Year)`.
 
 *Assumption: `Estimated Revenue (Last 365 Days)` reflects Airbnb's own trailing-365-day estimate where present, supplemented by a calculated value (price × estimated occupancy) for listings missing this figure directly — see the imputation methodology in* [*SQL Code.md*](./SQL%20Code.md) *(Section 2.3).*
 
