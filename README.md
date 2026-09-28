@@ -13,13 +13,14 @@
 
 This project analyzes ~11,000 active Toronto Airbnb listings (Inside Airbnb, July 2024 – June 2025) to identify which property characteristics — location, size, category, stay length, and amenities — are associated with stronger revenue and occupancy performance. It was built in two phases: an initial 2025 SQL/Excel analysis, later revisited and expanded in 2026 into a full Power BI reporting solution after completing the Microsoft Power BI Data Analyst (PL-300) certification.
 
-The result is a complete BI pipeline: a cleaned, normalized PostgreSQL database → a dimensional reporting model → an interactive, six-page Power BI report.
+The result is a complete BI pipeline: a cleaned, normalized PostgreSQL database → a dimensional reporting model → an interactive, seven-page Power BI report.
 
 ## ❓ Business Questions
 
 - Which **property categories** (Apartment, House, Hotel, Villa, Farm) show the strongest revenue and occupancy?
 - How does **listing size** (guest capacity) relate to performance?
-- How does **stay length** relate to performance — and does it reflect Toronto's short-term rental regulations?
+- Does **host profile** (portfolio size, Superhost status) or **review rating** relate to performance?
+- How does **stay length** relate to performance?
 - Which **neighbourhoods** command a revenue premium?
 - Which **amenities** are associated with stronger performance, once small-sample noise is controlled for?
 - Which **combinations of characteristics** — and which individual listings — outperform the market?
@@ -30,13 +31,17 @@ The result is a complete BI pipeline: a cleaned, normalized PostgreSQL database 
 |---|---|
 | ![Executive Overview](Dashboard/Current/Screenshots/Overview.png) | ![Revenue Drivers](Dashboard/Current/Screenshots/Revenue%20Drivers.png) |
 
-| Listing Performance | Segment Matrix |
+| Host Performance | Listing Performance |
 |---|---|
-| ![Listing Performance](Dashboard/Current/Screenshots/Listing%20Performance.png) | ![Segment Matrix](Dashboard/Current/Screenshots/Segment%20Matrix.png) |
+| ![Host Performance](Dashboard/Current/Screenshots/Host%20Performance.png) | ![Listing Performance](Dashboard/Current/Screenshots/Listing%20Performance.png) |
 
-| Amenities | About & Definitions |
+| Segment Matrix | Amenities |
 |---|---|
-| ![Amenities](Dashboard/Current/Screenshots/Amenities.png) | ![About & Definitions](Dashboard/Current/Screenshots/Info.png) |
+| ![Segment Matrix](Dashboard/Current/Screenshots/Segment%20Matrix.png) | ![Amenities](Dashboard/Current/Screenshots/Amenities.png) |
+
+| About & Definitions | |
+|---|---|
+| ![About & Definitions](Dashboard/Current/Screenshots/Info.png) | |
 
 *Full-resolution screenshots available in [`Dashboard/Current/Screenshots/`](Dashboard/Current/Screenshots/).*
 
@@ -122,7 +127,7 @@ Full schema detail: [`Documentation/Reporting Schema.md`](Documentation/Reportin
 - **Data Modeling** — normalized relational design for the source database
 - **Dimensional Modeling** — star schema with fact, dimension, and bridge tables for Power BI
 - **DAX** — a consistent, extensible measure library with context manipulation and data-quality-aware (threshold-gated) calculations
-- **Dashboard Design** — a six-page, purpose-built Power BI report with consistent cross-filtering and a deliberate visual system
+- **Dashboard Design** — a seven-page, purpose-built Power BI report with consistent cross-filtering and a deliberate visual system
 - **Documentation** — reviewer-ready technical documentation across the full project lifecycle
 
 ## 📚 Documentation
@@ -140,8 +145,9 @@ Full schema detail: [`Documentation/Reporting Schema.md`](Documentation/Reportin
 
 - **Apartments dominate revenue share** — 54% of listings but 66% of total estimated revenue.
 - **Size is associated with revenue** — all five top-performing segments consist of Large or Group listings (5+ guests), though larger/longer-stay listings trend toward lower occupancy than smaller, short-term ones.
-- **Location carries a real premium** — the top 10 neighbourhoods by median revenue range from roughly $20K to $36K, independent of property type.
+- **Location carries a real premium** — among neighbourhoods with at least 30 listings, the top 10 by median revenue range from roughly $19K to $35K, independent of property type.
 - **Common amenities ≠ high-performing amenities** — baseline amenities (Wi-Fi, heating, A/C) are near-universal, while amenities associated with higher revenue (garage, lake view, building staff, waterfront) signal larger or higher-end properties.
+- **Host profile shows large gaps** — single-listing hosts show about double the median revenue of multi-listing hosts, and Superhosts show roughly double the median revenue of non-Superhosts (with a direction-of-effect caveat, since Superhost status is partly earned through performance).
 - **Data quality was handled transparently** — inactive listings, imputed prices, price outliers, and duplicate records were flagged, not silently removed, keeping the analysis auditable end to end.
 
 Full findings: [`Documentation/Project Writeup.md`](Documentation/Project%20Writeup.md)
