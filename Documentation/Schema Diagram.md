@@ -66,9 +66,6 @@ erDiagram
         boolean Is_Price_Outlier
         int64 Minimum_Nights
         int64 Maximum_Nights
-        int64 Availability_Last_30_Days
-        int64 Availability_Last_365_Days
-        int64 Availability_End_Of_Fiscal_Year
         int64 Total_Reviews
         int64 Total_Reviews_Last_12_Months
         int64 Total_Reviews_Last_Year
