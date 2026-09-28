@@ -12,108 +12,93 @@ This diagram shows the **Power BI semantic model** (star schema) as it currently
 ```mermaid
 erDiagram
 
-    dim\_hosts ||--o{ fact\_listings : "hosts"
-    dim\_neighbourhoods ||--o{ fact\_listings : "located in"
-    dim\_classifications ||--o{ fact\_listings : "classifies"
+    dim_hosts ||--o{ fact_listings : hosts
+    dim_neighbourhoods ||--o{ fact_listings : located_in
+    dim_classifications ||--o{ fact_listings : classifies
 
-    fact\_listings ||--o{ bridge\_amenities : "has"
-    dim\_amenities ||--o{ bridge\_amenities : "maps"
+    fact_listings ||--o{ bridge_amenities : has
+    dim_amenities ||--o{ bridge_amenities : maps
 
-    dim\_hosts {
-        int64 host\_key PK "hidden"
-        string Host\_Name
-        dateTime Host\_Since
-        string Host\_Location
+    dim_hosts {
+        int64 host_key PK
+        string Host_Name
+        dateTime Host_Since
+        string Host_Location
         boolean Superhost
-        int64 Active\_Listings\_Count "calculated"
-        string Host\_Scale "calculated"
-        int64 Host\_Scale\_Sort "calculated"
-        string Superhost\_Status "calculated"
+        int64 Active_Listings_Count
+        string Host_Scale
+        int64 Host_Scale_Sort
+        string Superhost_Status
     }
 
-    dim\_neighbourhoods {
-        int64 neighbourhood\_id PK "hidden"
+    dim_neighbourhoods {
+        int64 neighbourhood_id PK
         string Neighbourhood
-        string Neighbourhood\_Area
+        string Neighbourhood_Area
     }
 
-    dim\_classifications {
-        int64 classification\_key PK "hidden"
-        string Rental\_Scope
-        string Property\_Category
-        string Listing\_Size
-        string Stay\_Length\_Category
-        string Property\_Type
-        string Segment "calculated"
+    dim_classifications {
+        int64 classification_key PK
+        string Rental_Scope
+        string Property_Category
+        string Listing_Size
+        string Stay_Length_Category
+        string Property_Type
+        string Segment
     }
 
-    dim\_amenities {
-        int64 amenity\_id PK "hidden"
+    dim_amenities {
+        int64 amenity_id PK
         string Amenity
     }
 
-    fact\_listings {
-        int64 listing\_id PK "hidden"
-
-        int64 host\_key FK "hidden"
-        int64 neighbourhood\_id FK "hidden"
-        int64 classification\_key FK "hidden"
-
-        string Listing\_Name
-
+    fact_listings {
+        int64 listing_id PK
+        int64 host_key FK
+        int64 neighbourhood_id FK
+        int64 classification_key FK
+        string Listing_Name
         int64 Accommodates
         double Bathrooms
         int64 Bedrooms
         int64 Beds
-
         decimal Price
-        boolean Is\_Price\_Outlier
-
-        int64 Minimum\_Nights
-        int64 Maximum\_Nights
-
-        int64 Availability\_Last\_30\_Days
-        int64 Availability\_Last\_365\_Days
-        int64 Availability\_End\_Of\_Fiscal\_Year
-
-        int64 Total\_Reviews
-        int64 Total\_Reviews\_Last\_12\_Months
-        int64 Total\_Reviews\_Last\_Year
-
-        int64 Estimated\_Occupancy\_Last\_365\_Days
-        decimal Estimated\_Revenue\_Last\_365\_Days
-
-        dateTime First\_Review
-        dateTime Last\_Review
-
+        boolean Is_Price_Outlier
+        int64 Minimum_Nights
+        int64 Maximum_Nights
+        int64 Availability_Last_30_Days
+        int64 Availability_Last_365_Days
+        int64 Availability_End_Of_Fiscal_Year
+        int64 Total_Reviews
+        int64 Total_Reviews_Last_12_Months
+        int64 Total_Reviews_Last_Year
+        int64 Estimated_Occupancy_Last_365_Days
+        decimal Estimated_Revenue_Last_365_Days
+        dateTime First_Review
+        dateTime Last_Review
         double Rating
-        double Accuracy\_Score
-        double Cleanliness\_Score
-        double Check\_In\_Score
-        double Communication\_Score
-        double Location\_Score
-        double Value\_Score
-
-        double Reviews\_Per\_Month
-
-        boolean Instantly\_Bookable
-
+        double Accuracy_Score
+        double Cleanliness_Score
+        double Check_In_Score
+        double Communication_Score
+        double Location_Score
+        double Value_Score
+        double Reviews_Per_Month
+        boolean Instantly_Bookable
         double Latitude
         double Longitude
-
-        int64 Amenity\_Count "calculated"
-        decimal Revenue\_bins "calculated"
-        string Revenue\_Range "calculated"
-        string Rating\_Band "calculated"
-        int64 Rating\_Band\_Sort "calculated"
+        int64 Amenity_Count
+        decimal Revenue_Bins
+        string Revenue_Range
+        string Rating_Band
+        int64 Rating_Band_Sort
     }
 
-    bridge\_amenities {
-        int64 listing\_id FK "hidden"
-        int64 amenity\_id FK "hidden"
+    bridge_amenities {
+        int64 listing_id FK
+        int64 amenity_id FK
     }
 ```
-
 ## Relationships
 
 All relationships are one-to-many, with the filter flowing from the "one" side to the "many" side unless noted.
