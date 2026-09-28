@@ -1105,8 +1105,7 @@ After completing the PL-300 certification, the project was revisited and the nor
 CREATE TABLE listings_reporting AS
 SELECT
     listing_id, name AS listing_name, host_id, property_type, room_type, accommodates,
-    bathrooms, bedrooms, beds, price, minimum_nights, maximum_nights, availability_30,
-    availability_365, availability_eoy, number_of_reviews, number_of_reviews_ltm,
+    bathrooms, bedrooms, beds, price, minimum_nights, maximum_nights, number_of_reviews, number_of_reviews_ltm,
     number_of_reviews_ly, estimated_occupancy_l365d, estimated_revenue_l365d,
     first_review, last_review, review_scores_rating AS overall_rating,
     review_scores_accuracy AS accuracy_score, review_scores_cleanliness AS cleanliness_score,
@@ -1178,11 +1177,7 @@ SELECT DISTINCT
     host_name,
     host_since,
     host_location,
-    host_is_superhost,
-    total_listings_count,
-    entire_home_listings,
-    private_room_listings,
-    shared_room_listings
+    host_is_superhost
 FROM hosts h
 LEFT JOIN host_info hf ON h.host_id = hf.host_id;
 
@@ -1244,6 +1239,9 @@ ALTER TABLE reporting.fact_listings
     ADD CONSTRAINT fk_fact_listing_classification
     FOREIGN KEY (classification_id)
     REFERENCES reporting.dim_listing_classification(classification_id);
+
+ALTER DATABASE airbnb
+SET search_path TO reporting;
 
 ALTER TABLE fact_listings
     DROP COLUMN length_category,
