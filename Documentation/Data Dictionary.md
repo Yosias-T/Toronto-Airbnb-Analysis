@@ -1,6 +1,6 @@
 # Data Dictionary — Toronto Airbnb Market Analysis
 
-This document defines every table and field in the Power BI reporting model, which follows a star-schema design: one fact table (`fact\_listings`) surrounded by four dimension tables (`dim\_hosts`, `dim\_neighbourhoods`, `dim\_classifications`, `dim\_amenities`) and one bridge table (`bridge\_amenities`) resolving the many-to-many relationship between listings and amenities. A disconnected `Measures List` table holds the DAX measures.
+This document defines every table and field in the Power BI reporting model, which follows a star-schema design: one fact table (`fact_listings`) surrounded by four dimension tables (`dim_hosts`, `dim_neighbourhoods`, `dim_classifications`, `dim_amenities`) and one bridge table (`bridge_amenities`) resolving the many-to-many relationship between listings and amenities. A disconnected `Measures List` table holds the DAX measures.
 
 Each field is documented with:
 
@@ -9,9 +9,9 @@ Each field is documented with:
 * **Data Type** — PostgreSQL type → Power BI type. Calculated columns show the Power BI type only.
 * **Business Purpose** — how the field is actually used in analysis and reporting, not just what it technically stores.
 
-> \*\*Note on naming:\*\* several fields carry different names at different stages of the project (e.g. `property\_group` in the original SQL model → `property\_category` in the reporting schema → \*\*Property Category\*\* in Power BI). Where relevant, the prior name is noted for cross-reference with \[SQL Code.md](./SQL%20Code.md).
+> \*\*Note on naming:\*\* several fields carry different names at different stages of the project (e.g. `property_group` in the original SQL model → `property_category` in the reporting schema → \*\*Property Category\*\* in Power BI). Where relevant, the prior name is noted for cross-reference with \[SQL Code.md](./SQL%20Code.md).
 
-> \*\*Note on hidden fields:\*\* surrogate keys and foreign keys (`host\_key`, `neighbourhood\_id`, `amenity\_id`, etc.) are hidden in Report view. They keep their snake\_case names because they are technical join fields, not analysis fields. The entire `bridge\_amenities` table is hidden.
+> \*\*Note on hidden fields:\*\* surrogate keys and foreign keys (`host_key`, `neighbourhood_id`, `amenity_id`, etc.) are hidden in Report view. They keep their snake\_case names because they are technical join fields, not analysis fields. The entire `bridge_amenities` table is hidden.
 
 **Power BI type key:** Whole Number = `int64` · Decimal Number = `double` · Fixed Decimal (Currency) = `decimal` · Text = `string` · True/False = `boolean` · Date = `dateTime`
 
@@ -25,11 +25,11 @@ Each field is documented with:
 
 |Column Name|Source Column|Data Type|Description|Business Purpose|
 |-|-|-|-|-|
-|`host\_key` *(hidden)*|`host\_key`|`BIGINT` → Whole Number|Surrogate primary key generated for the reporting model, replacing the original Airbnb `host\_id`.|Enables stable relationships between `fact\_listings` and this dimension, independent of any changes to source-system host identifiers.|
-|**Host Name**|`host\_name`|`VARCHAR(50)` → Text|The host's display name as listed on Airbnb.|Used for listing-level detail views and host identification in drill-through analysis.|
-|**Host Since**|`host\_since`|`DATE` → Date|The date the host's Airbnb account was created.|Enables tenure-based segmentation — e.g. comparing performance of long-tenured hosts against newer entrants to the Toronto market.|
-|**Host Location**|`host\_location`|`VARCHAR(75)` → Text|The host's self-reported location.|Indicates whether a host is locally based in Toronto or managing listings remotely; relevant to understanding local vs. absentee/professional management patterns.|
-|**Superhost**|`host\_is\_superhost`|`BOOLEAN` → True/False|Whether the host holds Airbnb's "Superhost" status.|A trust/quality signal; used to evaluate whether Superhost status is associated with stronger listing performance (revenue, occupancy, reviews).|
+|`host_key` *(hidden)*|`host_key`|`BIGINT` → Whole Number|Surrogate primary key generated for the reporting model, replacing the original Airbnb `host_id`.|Enables stable relationships between `fact_listings` and this dimension, independent of any changes to source-system host identifiers.|
+|**Host Name**|`host_name`|`VARCHAR(50)` → Text|The host's display name as listed on Airbnb.|Used for listing-level detail views and host identification in drill-through analysis.|
+|**Host Since**|`host_since`|`DATE` → Date|The date the host's Airbnb account was created.|Enables tenure-based segmentation — e.g. comparing performance of long-tenured hosts against newer entrants to the Toronto market.|
+|**Host Location**|`host_location`|`VARCHAR(75)` → Text|The host's self-reported location.|Indicates whether a host is locally based in Toronto or managing listings remotely; relevant to understanding local vs. absentee/professional management patterns.|
+|**Superhost**|`host_is_superhost`|`BOOLEAN` → True/False|Whether the host holds Airbnb's "Superhost" status.|A trust/quality signal; used to evaluate whether Superhost status is associated with stronger listing performance (revenue, occupancy, reviews).|
 
 ### 
 
@@ -52,9 +52,9 @@ Each field is documented with:
 
 |Column Name|Source Column|Data Type|Description|Business Purpose|
 |-|-|-|-|-|
-|`neighbourhood\_id` *(hidden)*|`neighbourhood\_id`|`BIGINT` → Whole Number|Surrogate primary key for the neighbourhood dimension.|Joins `fact\_listings` to this dimension for all location-based analysis and filtering.|
-|**Neighbourhood**|`neighbourhood\_name`|`VARCHAR(50)` → Text|The specific Toronto neighbourhood name, as defined by the City of Toronto's official neighbourhood boundaries (via the source data's `neighbourhood\_cleansed` field).|Powers granular, neighbourhood-level analysis — e.g. the Top 10 Neighbourhoods by Median Revenue view, used to identify specific high-value micro-markets.|
-|**Neighbourhood Area**|`neighbourhood\_group`|`VARCHAR(50)` → Text|A broader geographic cluster (e.g. Downtown Core, Midtown, North York, Scarborough, Etobicoke, East End, West End) that the neighbourhood belongs to.|Reduces \~140 individual neighbourhoods to a manageable set of analytical regions, making area-level comparisons and slicers usable without overwhelming the report with too many categories.|
+|`neighbourhood_id` *(hidden)*|`neighbourhood_id`|`BIGINT` → Whole Number|Surrogate primary key for the neighbourhood dimension.|Joins `fact_listings` to this dimension for all location-based analysis and filtering.|
+|**Neighbourhood**|`neighbourhood_name`|`VARCHAR(50)` → Text|The specific Toronto neighbourhood name, as defined by the City of Toronto's official neighbourhood boundaries (via the source data's `neighbourhood_cleansed` field).|Powers granular, neighbourhood-level analysis — e.g. the Top 10 Neighbourhoods by Median Revenue view, used to identify specific high-value micro-markets.|
+|**Neighbourhood Area**|`neighbourhood_group`|`VARCHAR(50)` → Text|A broader geographic cluster (e.g. Downtown Core, Midtown, North York, Scarborough, Etobicoke, East End, West End) that the neighbourhood belongs to.|Reduces \~140 individual neighbourhoods to a manageable set of analytical regions, making area-level comparisons and slicers usable without overwhelming the report with too many categories.|
 
 **Hierarchy:** *Neighbourhood Area Hierarchy* — Neighbourhood Area → Neighbourhood.
 
@@ -70,12 +70,12 @@ Each field is documented with:
 
 |Column Name|Source Column|Data Type|Description|Business Purpose|
 |-|-|-|-|-|
-|`classification\_key` *(hidden)*|`classification\_key`|`BIGINT` → Whole Number|Surrogate primary key for this dimension.|Joins `fact\_listings` to a single set of classification attributes, avoiding repeated category text on every fact row.|
-|**Rental Scope**|`rental\_scope`|`VARCHAR(20)` → Text|Whether the listing offers exclusive use of the property or shared/partial access: **Entire**, **Private Room**, or **Shared Room**.|A primary segmentation axis throughout the report; rental scope is one of the strongest differentiators of both price point and guest experience.|
-|**Property Category**|`property\_category`|`VARCHAR(20)` → Text|A standardized property classification (Apartment, House, Hotel, Villa, Castle, Farm, Other), derived from dozens of raw Airbnb property-type values. Referred to as `property\_group` in the source/normalized schema.|Enables meaningful property-type comparisons that wouldn't be possible against the raw, highly fragmented `Property Type` field — the basis for the report's Property Category-level revenue and occupancy analysis.|
-|**Listing Size**|`accommodation\_size`|`VARCHAR(20)` → Text|A guest-capacity band — **Small** (1–2), **Medium** (3–4), **Large** (5–7), or **Group** (8+) — derived from the listing's `Accommodates` value. Referred to as `accommodate\_group` in the source schema.|Groups listings into comparable size tiers for revenue/occupancy analysis, since raw guest-capacity values are too granular to analyze individually.|
-|**Stay Length Category**|`stay\_length\_category`|`VARCHAR(20)` → Text|A minimum-stay classification — **Short-term** (<28 nights), **Long-term** (28–89), **Seasonal** (90–179), or **Lease-style** (180+) — derived from the listing's minimum night requirement.|Distinguishes classic short-term rentals from longer-term stays, which behave differently in both pricing and regulatory context (Toronto's short-term rental bylaws influence minimum-stay behavior).|
-|**Property Type**|`property\_type`|`VARCHAR(45)` → Text|The original, unstandardized Airbnb property type text (e.g. "Entire rental unit," "Private room in bungalow").|Preserved alongside the standardized `Property Category` for transparency and to support drill-down into the most granular level of property detail when needed.|
+|`classification_key` *(hidden)*|`classification_key`|`BIGINT` → Whole Number|Surrogate primary key for this dimension.|Joins `fact_listings` to a single set of classification attributes, avoiding repeated category text on every fact row.|
+|**Rental Scope**|`rental_scope`|`VARCHAR(20)` → Text|Whether the listing offers exclusive use of the property or shared/partial access: **Entire**, **Private Room**, or **Shared Room**.|A primary segmentation axis throughout the report; rental scope is one of the strongest differentiators of both price point and guest experience.|
+|**Property Category**|`property_category`|`VARCHAR(20)` → Text|A standardized property classification (Apartment, House, Hotel, Villa, Castle, Farm, Other), derived from dozens of raw Airbnb property-type values. Referred to as `property_group` in the source/normalized schema.|Enables meaningful property-type comparisons that wouldn't be possible against the raw, highly fragmented `Property Type` field — the basis for the report's Property Category-level revenue and occupancy analysis.|
+|**Listing Size**|`accommodation_size`|`VARCHAR(20)` → Text|A guest-capacity band — **Small** (1–2), **Medium** (3–4), **Large** (5–7), or **Group** (8+) — derived from the listing's `Accommodates` value. Referred to as `accommodate_group` in the source schema.|Groups listings into comparable size tiers for revenue/occupancy analysis, since raw guest-capacity values are too granular to analyze individually.|
+|**Stay Length Category**|`stay_length_category`|`VARCHAR(20)` → Text|A minimum-stay classification — **Short-term** (<28 nights), **Long-term** (28–89), **Seasonal** (90–179), or **Lease-style** (180+) — derived from the listing's minimum night requirement.|Distinguishes classic short-term rentals from longer-term stays, which behave differently in both pricing and regulatory context (Toronto's short-term rental bylaws influence minimum-stay behavior).|
+|**Property Type**|`property_type`|`VARCHAR(45)` → Text|The original, unstandardized Airbnb property type text (e.g. "Entire rental unit," "Private room in bungalow").|Preserved alongside the standardized `Property Category` for transparency and to support drill-down into the most granular level of property detail when needed.|
 
 **Hierarchy:** *Property Category Hierarchy* — Property Category → Property Type.
 
@@ -83,17 +83,17 @@ Each field is documented with:
 
 |Column Name|Data Type|Logic|Business Purpose|
 |-|-|-|-|
-|**Segment**|Text|Concatenates `Property Category`, `Stay Length Category`, and `Listing Size` with " \| " separators (e.g. `Apartment \| Short-term \| Small`).|A single combined label for ranking and comparing the most granular market segments in one visual. Used by the `Segment, % of Listings` measure.|
+|**Segment**|Text|Concatenates `Property Category`, `Stay Length Category`, and `Listing Size` with " \| " separators (e.g. `Apartment | Short-term | Small`).|A single combined label for ranking and comparing the most granular market segments in one visual. Used by the `Segment, % of Listings` measure.|
 
 \---
 
 ## dim\_amenities
 
-**Description:** One row per unique, standardized amenity offered across all listings. Works together with `bridge\_amenities` to resolve the many-to-many relationship between listings and amenities — a single listing can offer dozens of amenities, and a single amenity (e.g. Wi-Fi) can appear on thousands of listings.
+**Description:** One row per unique, standardized amenity offered across all listings. Works together with `bridge_amenities` to resolve the many-to-many relationship between listings and amenities — a single listing can offer dozens of amenities, and a single amenity (e.g. Wi-Fi) can appear on thousands of listings.
 
 |Column Name|Source Column|Data Type|Description|Business Purpose|
 |-|-|-|-|-|
-|`amenity\_id` *(hidden)*|`amenity\_id`|`BIGINT` → Whole Number|Surrogate primary key for the amenity dimension.|Joins `bridge\_amenities` to a single, deduplicated amenity name.|
+|`amenity_id` *(hidden)*|`amenity_id`|`BIGINT` → Whole Number|Surrogate primary key for the amenity dimension.|Joins `bridge_amenities` to a single, deduplicated amenity name.|
 |**Amenity**|`amenity`|`VARCHAR(100)` → Text|The standardized amenity name (e.g. "Wifi," "Air Conditioning," "Lake View"), consolidated from dozens of raw wording variants in the source data.|Powers all amenity-level analysis in the report — most common amenities, amenities associated with higher revenue/occupancy, and amenity prevalence-vs-performance comparisons. Standardization is what makes this analysis possible at all; without it, wording variants would fragment the same amenity into dozens of near-duplicate categories.|
 
 \---
@@ -108,7 +108,7 @@ Each field is documented with:
 |-|-|-|-|-|
 |`listing_id` *(hidden)*|`listing_id`|`BIGINT` → Whole Number|Surrogate primary key uniquely identifying each listing.|The fact table's grain; the join key for every measure and every dimension relationship in the model. Counted by `Total Listings`.|
 |`host_key` *(hidden)*|`host_key`|`BIGINT` → Whole Number|Foreign key to `dim_hosts`.|Links each listing to its host, enabling host-level rollups and Superhost/tenure-based analysis.|
-|`neighbourhood_id` *(hidden)*|`neighbourhood_id`|`BIGINT` → Whole Number|Foreign key to `dim\_neighbourhoods`.|Links each listing to its location for all geographic analysis.|
+|`neighbourhood_id` *(hidden)*|`neighbourhood_id`|`BIGINT` → Whole Number|Foreign key to `dim_neighbourhoods`.|Links each listing to its location for all geographic analysis.|
 |`classification_key`<br />*(hidden)*|`classification_key`|`BIGINT` → Whole Number|Foreign key to `dim_classifications`.|Links each listing to its property category, listing size, stay length category, rental scope, and raw property type.|
 |**Listing Name**|`listing_name`|`TEXT` → Text|The listing's title as displayed on Airbnb.|Used in listing-level detail views (e.g. the Top 15 Listings by Revenue table) for human-readable identification.|
 |**Accommodates**|`accommodates`|`SMALLINT` → Whole Number|Maximum guest capacity of the listing.|The raw value underlying the `Listing Size` classification; also useful for precise, non-binned capacity analysis.|
@@ -146,7 +146,7 @@ Each field is documented with:
 
 |Column Name|Data Type|Logic|Business Purpose|
 |-|-|-|-|
-|**Amenity Count**|Whole Number|`COUNTROWS(RELATEDTABLE(bridge\_amenities))` — number of amenities offered by the listing.|Enables amenity-richness analysis at the listing level. Feeds `Average Amenity Count` and `Amenity Density Score`.|
+|**Amenity Count**|Whole Number|`COUNTROWS(RELATEDTABLE(bridge_amenities))` — number of amenities offered by the listing.|Enables amenity-richness analysis at the listing level. Feeds `Average Amenity Count` and `Amenity Density Score`.|
 |**Revenue bins**|Fixed Decimal (Currency)|Rounds `Estimated Revenue (Last 365 Days)` down to the nearest $10,000 (blank if revenue is blank). Set up as a Power BI numeric bin group.|Groups listings into $10K revenue bands for distribution charts. Numeric so the bands sort correctly.|
 |**Revenue Range**|Text|Text label for each bin, e.g. `0–10K`, `10K–20K`, `20K–30K`. Sorted by `Revenue bins`.|Readable axis labels for the revenue distribution chart; used with `% of Total Listings`.|
 |**Rating Band**|Text|Buckets `Rating` into **Below 4.0**, **4.0–4.5**, **4.5–4.8**, **4.8–5.0**, or **No Rating** (blank). Sorted by `Rating Band Sort`.|Groups continuous ratings into meaningful quality tiers for comparing revenue/occupancy across guest-satisfaction levels.|
@@ -156,14 +156,14 @@ Each field is documented with:
 
 ## bridge\_amenities
 
-**Description:** A hidden bridge (associative) table resolving the many-to-many relationship between listings and amenities. Each row represents one listing offering one amenity; a listing with 20 amenities produces 20 rows here. This structure is what allows amenity-level aggregation (e.g. "median revenue for listings with a Garage") without duplicating rows in `fact\_listings` itself. The relationship to `fact\_listings` uses **bi-directional** filtering so amenity selections filter listings.
+**Description:** A hidden bridge (associative) table resolving the many-to-many relationship between listings and amenities. Each row represents one listing offering one amenity; a listing with 20 amenities produces 20 rows here. This structure is what allows amenity-level aggregation (e.g. "median revenue for listings with a Garage") without duplicating rows in `fact_listings` itself. The relationship to `fact_listings` uses **bi-directional** filtering so amenity selections filter listings.
 
 |Column Name|Source Column|Data Type|Description|Business Purpose|
 |-|-|-|-|-|
-|`listing\_id` *(hidden)*|`listing\_id`|`BIGINT` → Whole Number|Foreign key to `fact\_listings`.|Identifies which listing offers the associated amenity.|
-|`amenity\_id` *(hidden)*|`amenity\_id`|`BIGINT` → Whole Number|Foreign key to `dim\_amenities`.|Identifies which standardized amenity is being associated with the listing.|
+|`listing_id` *(hidden)*|`listing_id`|`BIGINT` → Whole Number|Foreign key to `fact_listings`.|Identifies which listing offers the associated amenity.|
+|`amenity_id` *(hidden)*|`amenity_id`|`BIGINT` → Whole Number|Foreign key to `dim_amenities`.|Identifies which standardized amenity is being associated with the listing.|
 
-*In PostgreSQL, `listing\_id` and `amenity\_id` together form this table's composite primary key. The Power BI model does not define a key on this table.*
+*In PostgreSQL, `listing_id` and `amenity_id` together form this table's composite primary key. The Power BI model does not define a key on this table.*
 
 \---
 
