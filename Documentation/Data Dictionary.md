@@ -106,7 +106,7 @@ Each field is documented with:
 
 |Column Name|Source Column|Data Type|Description|Business Purpose|
 |-|-|-|-|-|
-|`listing\_id` *(hidden)*|`listing\_id`|`BIGINT` → Whole Number|Surrogate primary key uniquely identifying each listing.|The fact table's grain; the join key for every measure and every dimension relationship in the model. Counted by `Total Listings`.|
+|`listing\_id` *(hidden)*|`listing_id`|`BIGINT` → Whole Number|Surrogate primary key uniquely identifying each listing.|The fact table's grain; the join key for every measure and every dimension relationship in the model. Counted by `Total Listings`.|
 |`host\_key` *(hidden)*|`host\_key`|`BIGINT` → Whole Number|Foreign key to `dim\_hosts`.|Links each listing to its host, enabling host-level rollups and Superhost/tenure-based analysis.|
 |`neighbourhood\_id` *(hidden)*|`neighbourhood\_id`|`BIGINT` → Whole Number|Foreign key to `dim\_neighbourhoods`.|Links each listing to its location for all geographic analysis.|
 |`classification\_key`<br />*(hidden)*|`classification\_key`|`BIGINT` → Whole Number|Foreign key to `dim\_classifications`.|Links each listing to its property category, listing size, stay length category, rental scope, and raw property type.|
